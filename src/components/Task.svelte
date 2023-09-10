@@ -1,15 +1,17 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
     import Icons from '../assets/icons.svelte';
     import DynamicRow from './DynamicRow.svelte';
     import Status from './Status.svelte'
     import { format } from 'date-fns'
 
+    // export let isMoved = false;
     export let data: TData;
     $: ({name, desc, status, addedAt} = data)
 
 </script>
 
-<tr class="task">
+<tr class="task" transition:fade>
     <Icons icon="grip"/>
     <DynamicRow value={name} type="title"/>
     <DynamicRow value={desc} type="desc"/>

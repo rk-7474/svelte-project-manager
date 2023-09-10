@@ -2,6 +2,7 @@
   import Task from './components/Task.svelte'
   import Icons from './assets/icons.svelte';
   import { currentId } from './components/stores'
+  import Draggable from './components/Draggable.svelte';
 
   let tasks: Array<TData> = [{
     name: "prova",
@@ -55,8 +56,9 @@
     justify-content: center;
     align-items: flex-end;
     flex-direction: column;
-    border-radius: 15px;
+    border-radius: 5px;
     box-shadow: -3px 8px 21px -2px #000000;
+    transition: width ease .3s;
   }
 
   .add {

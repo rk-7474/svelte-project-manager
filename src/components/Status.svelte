@@ -1,4 +1,5 @@
 <script>
+    import { fade } from "svelte/transition";
     import { statusList } from "./stores";
 
     export let status = "Non iniziato";
@@ -9,15 +10,16 @@
     $statusList = [    
         {name: "Non iniziato", color: "red"},
         {name: "In corso", color: "cyan"},
-        {name: "Terminato", color: "verde"},
+        {name: "Terminato", color: "lime"},
     ]
 
-    $: {
+    $: { 
         for (let i in $statusList) {
-            let {elemName, elemColor} = $statusList[i]
-            if (elemName !== status) continue
+            let curStatus = $statusList[i]
 
-            color = elemColor
+            if (curStatus.name !== status) continue
+
+            color = curStatus.color
             break
         }
     }
@@ -39,6 +41,11 @@
     const handleKey = ({keyCode}) => {
         if (keyCode == 13 || keyCode == 27) closeMenu()
     }
+
+    const setStatus = (name) => {
+        showContextMenu = false;
+        status = name
+    }
 </script>
 
 <button class="container" on:click={handleChangeStatus} style="--status-color: {color}">
@@ -46,9 +53,10 @@
     <div class="dot"/>
 </button>
 {#if (showContextMenu)}
-    <div class="contextMenu" style:left="{m.x}px" style:top="{m.y}px" on:focusout={closeMenu} on:keyup={handleKey} role="button" tabindex="0" >
+    <div class="fullscreen" role="button" tabindex="0" on:keydown={handleKey} on:click={closeMenu}/>
+    <div class="contextMenu" style:left="{m.x}px" style:top="{m.y}px" style:z-index="0" transition:fade={{duration: 100}} >
         {#each $statusList as elem (elem.name)}
-            <button class="container" on:click={handleChangeStatus} style="--status-color: {elem.color}">
+            <button class="container" on:click={() => setStatus(elem.name)} style="--status-color: {elem.color}">
                 {elem.name}
                 <div class="dot"/>
             </button>
@@ -59,9 +67,18 @@
 <style>
     .contextMenu {
         width: 160px;
-        border: 2px solid black;
-        border-radius: 15px;
+        background-color: rgb(38, 47, 47);
+        padding: 20px;
+        border-radius: 5px;
         position: absolute;
+    }
+
+    .fullscreen {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
     }
 
     .container {
